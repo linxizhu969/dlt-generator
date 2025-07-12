@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>微信大乐透助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            color: #fff;
+            line-height: 1.6;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 15px;
+            position: relative;
+        }
+        
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo i {
+            font-size: 32px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px 20px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            color: #ffcc00;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+        }
+        
+        .result-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .area-label {
+            font-size: 16px;
+            color: #ffcc00;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .area-label i {
+            margin-right: 8px;
+        }
+        
+        .numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .ball {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .front-ball {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .back-ball {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            margin: 20px 0;
+        }
+        
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn i {
+            margin-right: 10px;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .history-section {
+            margin-top: 20px;
+        }
+        
+        .history-title {
+            font-size: 16px;
+            color: #ffcc00;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .history-title i {
+            margin-right: 8px;
+        }
+        
+        .history-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .history-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+        }
+        
+        .history-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+        
+        .history-ball {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            padding: 25px 15px;
+            line-height: 1.8;
+        }
+        
+        .success-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(46, 204, 113, 0.95);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .success-message.show {
+            opacity: 1;
+        }
+        
+        .success-message i {
+            margin-right: 8px;
+        }
+        
+        @media (min-width: 400px) {
+            .container {
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-dice"></i>
+            </div>
+            <h1>微信大乐透助手</h1>
+            <p class="subtitle">随机生成符合规则的大乐透号码，支持一键复制</p>
+        </header>
+        
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-ticket-alt"></i> 本期号码
+            </div>
+            
+            <div class="result-container">
+                <div class="area-label">
+                    <i class="fas fa-bullseye"></i> 前区号码（5个，1-35）
+                </div>
+                <div class="numbers" id="frontNumbers">
+                    <!-- 前区号码将通过JS动态生成 -->
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="area-label">
+                    <i class="fas fa-bullseye"></i> 后区号码（2个，1-12）
+                </div>
+                <div class="numbers" id="backNumbers">
+                    <!-- 后区号码将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <div class="control-panel">
+                <button class="btn generate-btn" id="generateBtn">
+                    <i class="fas fa-sync-alt"></i> 生成新号码
+                </button>
+                <button class="btn copy-btn" id="copyBtn">
+                    <i class="fas fa-copy"></i> 复制全部号码
+                </button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-history"></i> 历史记录
+            </div>
+            
+            <div class="history-section">
+                <div class="history-title">
+                    <i class="fas fa-list"></i> 最近生成的号码
+                </div>
+                <div class="history-container" id="historyList">
+                    <!-- 历史记录将通过JS动态生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>本工具仅用于娱乐目的，不保证中奖概率</p>
+            <p>号码完全随机生成，符合大乐透规则</p>
+            <p>© 2023 大乐透选号助手 | 数据不保存不收集</p>
+        </div>
+    </div>
+    
+    <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i> 号码已复制到剪贴板！
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const frontNumbersEl = document.getElementById('frontNumbers');
+            const backNumbersEl = document.getElementById('backNumbers');
+            const generateBtn = document.getElementById('generateBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const historyList = document.getElementById('historyList');
+            const successMessage = document.getElementById('successMessage');
+            
+            let currentDLT = null;
+            
+            // 初始生成一组号码
+            generateNewNumbers();
+            
+            // 生成新号码按钮事件
+            generateBtn.addEventListener('click', generateNewNumbers);
+            
+            // 复制按钮事件
+            copyBtn.addEventListener('click', copyNumbers);
+            
+            // 生成一组大乐透号码
+            function generateDLT() {
+                // 生成前区号码（5个，范围1-35）
+                const frontNumbers = generateUniqueNumbers(1, 35, 5).sort((a, b) => a - b);
+                
+                // 生成后区号码（2个，范围1-12）
+                const backNumbers = generateUniqueNumbers(1, 12, 2).sort((a, b) => a - b);
+                
+                return {
+                    front: frontNumbers,
+                    back: backNumbers,
+                    timestamp: new Date().toLocaleTimeString('zh-CN', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                };
+            }
+            
+            // 生成不重复的随机数
+            function generateUniqueNumbers(min, max, count) {
+                const numbers = [];
+                while(numbers.length < count) {
+                    const num = Math.floor(Math.random() * (max - min + 1)) + min;
+                    if(!numbers.includes(num)) {
+                        numbers.push(num);
+                    }
+                }
+                return numbers;
+            }
+            
+            // 显示大乐透号码
+            function displayDLT(dlt) {
+                // 清空前区显示
+                frontNumbersEl.innerHTML = '';
+                
+                // 显示前区号码
+                dlt.front.forEach(num => {
+                    const ball = document.createElement('div');
+                    ball.className = 'ball front-ball';
+                    ball.textContent = num;
+                    frontNumbersEl.appendChild(ball);
+                });
+                
+                // 清空后区显示
+                backNumbersEl.innerHTML = '';
+                
+                // 显示后区号码
+                dlt.back.forEach(num => {
+                    const ball = document.createElement('div');
+                    ball.className = 'ball back-ball';
+                    ball.textContent = num;
+                    backNumbersEl.appendChild(ball);
+                });
+            }
+            
+            // 添加历史记录
+            function addToHistory(dlt) {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                historyItem.innerHTML = `
+                    <div>${dlt.timestamp} 生成</div>
+                    <div class="history-numbers">
+                        ${dlt.front.map(num => `<div class="history-ball front-ball">${num}</div>`).join('')}
+                        <div style="color:#ffcc00; margin:0 5px; font-weight:bold">|</div>
+                        ${dlt.back.map(num => `<div class="history-ball back-ball">${num}</div>`).join('')}
+                    </div>
+                `;
+                
+                // 添加到历史列表顶部
+                historyList.insertBefore(historyItem, historyList.firstChild);
+                
+                // 限制历史记录最多显示5条
+                if(historyList.children.length > 5) {
+                    historyList.removeChild(historyList.lastChild);
+                }
+            }
+            
+            // 生成新号码
+            function generateNewNumbers() {
+                const newDLT = generateDLT();
+                currentDLT = newDLT;
+                displayDLT(newDLT);
+                addToHistory(newDLT);
+            }
+            
+            // 复制号码到剪贴板
+            function copyNumbers() {
+                if (!currentDLT) return;
+                
+                const frontNums = currentDLT.front.join(' ');
+                const backNums = currentDLT.back.join(' ');
+                const textToCopy = `大乐透号码：\n前区：${frontNums}\n后区：${backNums}`;
+                
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    // 显示成功消息
+                    successMessage.classList.add('show');
+                    setTimeout(() => {
+                        successMessage.classList.remove('show');
+                    }, 2000);
+                }).catch(err => {
+                    // 如果复制失败，使用备用方法
+                    const textarea = document.createElement('textarea');
+                    textarea.value = textToCopy;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        successMessage.classList.add('show');
+                        setTimeout(() => {
+                            successMessage.classList.remove('show');
+                        }, 2000);
+                    } catch (e) {
+                        alert('复制失败，请手动复制号码');
+                    }
+                    document.body.removeChild(textarea);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
