@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"/><title>小六壬</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#f5f7fa;margin:0;height:100vh;display:flex;justify-content:center;align-items:center}
+.card{background:#fff;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.1);padding:30px 40px;width:420px;text-align:center}
+.field{margin:8px 0;text-align:left}label{font-size:14px;color:#606266}select{width:100%;padding:8px;border:1px solid #dcdfe6;border-radius:4px}
+button{margin-top:15px;padding:10px 22px;border:none;background:#409eff;color:#fff;border-radius:4px;cursor:pointer}
+.result{margin-top:20px;display:none}.ico{font-size:42px}.gua{font-size:20px;font-weight:bold;margin:4px 0}.txt{font-size:14px;color:#555;text-align:left;line-height:1.6}</style></head>
+<body>
+<div class="card">
+  <h2>小六壬 · 年月日时辰选择</h2>
+  <div class="field"><label>年份</label><select id="year"></select></div>
+  <div class="field"><label>月份</label><select id="month"></select></div>
+  <div class="field"><label>日期</label><select id="day"></select></div>
+  <div class="field"><label>时辰</label><select id="hour">
+    <option value="0">子时 23-1点</option><option value="1">丑时 1-3点</option><option value="2">寅时 3-5点</option><option value="3">卯时 5-7点</option>
+    <option value="4">辰时 7-9点</option><option value="5">巳时 9-11点</option><option value="6">午时 11-13点</option><option value="7">未时 13-15点</option>
+    <option value="8">申时 15-17点</option><option value="9">酉时 17-19点</option><option value="10">戌时 19-21点</option><option value="11">亥时 21-23点</option>
+  </select></div>
+  <div class="field"><label>刻度</label><select id="ke">
+    <option value="0">初刻 0-14分</option><option value="1">一刻 15-29分</option><option value="2">二刻 30-44分</option><option value="3">三刻 45-59分</option>
+  </select></div>
+  <button onclick="start()">起卦</button>
+  <div class="result" id="res"><div class="ico" id="ico"></div><div class="gua" id="gua"></div><div class="txt" id="txt"></div></div>
+</div>
+<script>
+const SHEN=[{name:'大安',ico:'🏠',txt:'安稳吉祥，诸事可成。'},{name:'留连',ico:'🕸️',txt:'拖延纠缠，事多阻碍。'},{name:'速喜',ico:'⚡',txt:'快速喜庆，利求谋。'},{name:'赤口',ico:'🔥',txt:'口舌是非，慎言行。'},{name:'小吉',ico:'🌟',txt:'小利可得，和合顺遂。'},{name:'空亡',ico:'⚠️',txt:'空虚无成，宜静守。'}];
+const GAN_START=[0,1,2,3,4,5,0,1,2,3];
+(function initSelects(){
+  const ys=document.getElementById('year');const ms=document.getElementById('month');const ds=document.getElementById('day');
+  for(let y=1900;y<=2100;y++){const o=document.createElement('option');o.value=y;o.textContent=y+'年';ys.appendChild(o);}
+  for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'月';ms.appendChild(o);}
+  function fillDays(max){ds.innerHTML='';for(let d=1;d<=max;d++){const o=document.createElement('option');o.value=d;o.textContent=d+'日';ds.appendChild(o);}}
+  function updateDays(){const m=parseInt(ms.value);fillDays(m===2?29:30);}
+  updateDays();ms.addEventListener('change',updateDays);
+  ys.value=new Date().getFullYear();
+})();
+function start(){
+  const y=parseInt(document.getElementById('year').value);
+  const m=parseInt(document.getElementById('month').value);
+  const d=parseInt(document.getElementById('day').value);
+  const h=parseInt(document.getElementById('hour').value);
+  const k=parseInt(document.getElementById('ke').value);
+  if(!y||!m||!d){alert('请完整选择年月日');return;}
+  const base=new Date(1900,0,31);
+  const diff=Math.floor((new Date(y,m-1,d)-base)/86400000);
+  const gan=(diff%10+10)%10;
+  const pos=(GAN_START[gan]+h+k+72)%6;
+  const g=SHEN[pos];
+  document.getElementById('ico').textContent=g.ico;
+  document.getElementById('gua').textContent=g.name;
+  document.getElementById('txt').textContent=g.txt;
+  document.getElementById('res').style.display='block';
+}
+</script>
+</body>
+</html>
